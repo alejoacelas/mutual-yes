@@ -21,3 +21,15 @@ The human wanted confirmation that the other browser received their vote confirm
 - All local tests passed. Live hosted/downloaded checks passed all four answer combinations, including delayed receipts; the downloaded file matched the local build.
 
 Agent session 01a0b639-960c-7dd2-b1db-56db7d334e4d · Commits 9626299
+
+## Vote now and return later
+
+The human wanted direct Yes/No voting, optional personal HTML downloads, and an asynchronous exchange that survives closed browsers.
+
+- Replaced the synchronous EMP exchange with persisted SMP state; both browsers advance the private comparison over separate visits. All four answer combinations pass, including fresh browsers using a downloaded file.
+- Added browser-generated checkpoint keys, padded authenticated encryption, owner-bound access, version checks, and distinct saved/peer-received confirmations. The Sunday deadline treats an unfinished exchange as no further date.
+- Tried a fresh Vercel project, but its deployment remained blocked by the provider's build incident. After the user logged into Fly, deployed one personal-account London machine with an encrypted persistent volume and flushed atomic file writes.
+- Verified the live hosted/downloaded exchange, recovery after a Fly machine restart, and exact deployed HTML bytes. The app still requires a few return visits, trusts its initial code, and has no independent security audit; one storage volume is not redundant.
+- Kept actual invitations and browser keys out of Git; the live test used a separate room before configuring the unused real invitation.
+
+Agent session 01a0b639-960c-7dd2-b1db-56db7d334e4d · Commits b9ce0f0, 560f9f1, 264a862, 6bef10b
