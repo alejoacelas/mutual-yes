@@ -1,0 +1,9 @@
+.git
+.env*
+.projects
+.agents
+.claude
+.cursor
+.test-output
+node_modules
+dist

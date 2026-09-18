@@ -1,12 +1,15 @@
+.projects/
 node_modules/
 dist/
 .test-output/
-.projects/
 .agents/
 .claude/
 .cursor/
 .cursorignore
 .vercel/
+
+.vercel
+.env*
 
 .projects/cache
 .projects/vault

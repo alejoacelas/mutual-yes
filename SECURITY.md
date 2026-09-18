@@ -35,7 +35,7 @@ To compare a download against a reproducible local build:
 
 ```sh
 npm ci
-PUBLIC_ORIGIN=https://your-host.example npm run build
+PUBLIC_ORIGIN=https://mutual-yes-alejo.vercel.app RELAY_ORIGIN=https://mutual-yes-relay.onrender.com npm run build
 node verify-download.mjs /path/to/mutual-yes.html
 ```
 

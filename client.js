@@ -209,7 +209,7 @@ $('download').onclick = async () => {
 $('verify').onclick = async () => {
   if (!channel || localVerified || ended) return;
   localVerified = true; $('verify').disabled = true; $('verify').textContent = 'Waiting for their confirmation…';
-  await sendEncrypted(Uint8Array.of(1)); maybeVote();
+  try { await sendEncrypted(Uint8Array.of(1)); maybeVote(); } catch { fail(); }
 };
 $('vote').onsubmit = async event => {
   event.preventDefault();
@@ -219,7 +219,7 @@ $('vote').onsubmit = async event => {
   if (answer !== 0 && answer !== 1) return;
   localReady = true; $('vote').hidden = true;
   describe('Your answer is locked', 'Waiting for the other person. Keep this page open.');
-  await sendEncrypted(Uint8Array.of(2)); void maybeCompute();
+  try { await sendEncrypted(Uint8Array.of(2)); void maybeCompute(); } catch { fail(); }
 };
 $('restart-button').onclick = () => { location.hash = ''; location.reload(); };
 window.addEventListener('beforeunload', event => { if (sock?.readyState === WebSocket.OPEN && !resultShown && !ended) { event.preventDefault(); event.returnValue = ''; } });
