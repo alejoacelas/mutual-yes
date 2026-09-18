@@ -1,6 +1,7 @@
-# Run log
+# Async run log
 
-- Completed the one-gate EMP computation, authenticated transport, minimal page, and self-contained download.
-- Local checks pass for all four answers, file and hosted clients, tampering, replay, invitation restrictions, expiration, disconnects, and mobile layout.
-- Fly provisioning was blocked by account verification; deployed the free relay on Render and the page on Vercel.
-- Live checks pass for all four answers and downloaded-file verification. The live proxy can delay disconnection by about 30 seconds; tests allow the relay heartbeat window.
+1. [ ] [est 20m | actual —] Verify resumable private computation and storage.
+2. [ ] [est 30m | actual —] Build direct voting and return flow.
+3. [ ] [est 20m | actual —] Test and deploy.
+
+The existing EMP browser wrapper has no exported resumable state. Investigating established staged protocols before replacing it.
