@@ -85,7 +85,7 @@ test('hosted and downloaded browsers complete all four real MPC outcomes', { tim
   } finally { await browser.close(); }
 });
 
-test('deadline, download copy, mobile layout and disconnect do not imply a submitted no', { timeout: 60000 }, async () => {
+test('deadline, download copy, mobile layout and disconnect do not imply a submitted no', { timeout: 120000 }, async () => {
   const browser = await chromium.launch({ headless: true });
   try {
     const a = await browser.newPage({ viewport: { width: 390, height: 844 } });
@@ -101,7 +101,7 @@ test('deadline, download copy, mobile layout and disconnect do not imply a submi
     const b = await browser.newPage(); await b.goto(invite); await b.locator('#online').click();
     await a.locator('#verification').waitFor({ state: 'visible' });
     await b.close();
-    await a.locator('#restart').waitFor({ state: 'visible' });
+    await a.locator('#restart').waitFor({ state: 'visible', timeout: 60000 });
     assert.equal(await a.locator('#result').isVisible(), false);
     assert.match(await a.locator('#notice').innerText(), /does not count as a no before the deadline/);
     await a.clock.setFixedTime(new Date(DEADLINE + 1));

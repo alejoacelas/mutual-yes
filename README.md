@@ -30,6 +30,6 @@ Production uses Vercel for the page/download and one free Render process for the
 
 For a single host, one Node process serves the page and WebSocket relay. No database, app credentials, or external scripts. Build with `PUBLIC_ORIGIN=https://your-host.example npm run build`, then `npm start`. Render’s `RENDER_EXTERNAL_URL` is used automatically. `PORT` defaults to 8080. `/health` returns `ok`.
 
-Do not use multiple instances: sessions live in one process and end on restart. Build/deploy before inviting anyone. Free hosting can take a minute to wake up.
+Do not use multiple instances: sessions live in one process and end on restart. Build/deploy before inviting anyone. Free hosting can take a minute to wake up; detecting a lost connection can take up to about 40 seconds.
 
 The maintained source is a few small files; `dist/index.html` is the single-file client produced by the build. [EMP-WASM](https://github.com/privacy-ethereum/emp-wasm) supplies authenticated garbling. Its browser port is archived and this integration has not had an independent security audit.

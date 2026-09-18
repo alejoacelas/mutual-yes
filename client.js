@@ -94,6 +94,8 @@ async function maybeCompute() {
     if (bits.length !== 1 || (bits[0] !== 0 && bits[0] !== 1)) throw new Error('Invalid result');
     // Flush final EMP messages before showing the result; do not transmit a plaintext result.
     await outgoing;
+    if (ended) return;
+    if (Date.now() >= DEADLINE) { expire(); return; }
     clearTimeout(timer); resultShown = true;
     $('session').hidden = true; $('result').hidden = false; notice('');
     $('result-title').textContent = bits[0] ? 'You both said yes' : 'No mutual yes';
@@ -222,6 +224,7 @@ $('vote').onsubmit = async event => {
   try { await sendEncrypted(Uint8Array.of(2)); void maybeCompute(); } catch { fail(); }
 };
 $('restart-button').onclick = () => { location.hash = ''; location.reload(); };
+window.addEventListener('pagehide', () => { if (sock?.readyState === WebSocket.OPEN) sock.close(1000, 'Page closed'); });
 window.addEventListener('beforeunload', event => { if (sock?.readyState === WebSocket.OPEN && !resultShown && !ended) { event.preventDefault(); event.returnValue = ''; } });
 $('hosted-options').hidden = local; $('local-options').hidden = !local;
 if (local) { $('mode').textContent = 'Downloaded copy'; $('entry-title').textContent = 'Start your private check'; }
