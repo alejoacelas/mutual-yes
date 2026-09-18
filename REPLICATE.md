@@ -11,3 +11,13 @@ The human wanted a minimal page and downloadable HTML for two people to discover
 - Documented the unavoidable inference for a yes voter, the initial trust required for downloads, and the absence of an independent audit. No personal call content is included.
 
 Agent session 01a0b639-960c-7dd2-b1db-56db7d334e4d · Commits d8bf08e, 966a297, 7b4b4b3
+
+## Encrypted delivery receipts
+
+The human wanted confirmation that the other browser received their vote confirmation.
+
+- Added an encrypted peer acknowledgement and a distinct waiting state; the receipt conveys readiness without revealing the choice or requiring the other person to vote.
+- Required the receipt before computation and advanced the protocol version so older downloads cannot silently omit acknowledgements.
+- All local tests passed. Live hosted/downloaded checks passed all four answer combinations, including delayed receipts; the downloaded file matched the local build.
+
+Agent session 01a0b639-960c-7dd2-b1db-56db7d334e4d · Commits 9626299
