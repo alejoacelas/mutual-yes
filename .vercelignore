@@ -7,3 +7,6 @@
 .test-output
 node_modules
 dist
+
+.private*
+.local-data

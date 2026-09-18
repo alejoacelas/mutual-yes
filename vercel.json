@@ -49,8 +49,7 @@
   ],
   "build": {
     "env": {
-      "PUBLIC_ORIGIN": "https://mutual-yes-alejo.vercel.app",
-      "RELAY_ORIGIN": "https://mutual-yes-relay.onrender.com"
+      "PUBLIC_ORIGIN": "https://mutual-yes-alejo.vercel.app"
     }
   }
 }

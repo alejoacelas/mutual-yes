@@ -1,12 +1,11 @@
-# Mutual Yes
+# Async Mutual Yes
 
-Build a quiet, neutral page for two people to learn whether both want another date.
+Provide one personal link per participant. Landing shows Yes and No directly; code comparison and invitation management are automatic.
 
-1. Use EMP authenticated garbling for a single AND gate; validate all four answer pairs.
-2. Bundle the browser code and WebAssembly into one downloadable HTML file, with a hosted mode and precise trust explanations.
-3. Relay encrypted, authenticated messages between two fixed participants; compare connection fingerprints before accepting votes.
-4. Test hosted and downloaded clients, disconnects, malformed messages, and mobile layout, then publish source and deploy if hosting access is available.
+1. Compare a common Yes value or an independent random No value using the established four-message SMP protocol.
+2. Encrypt private checkpoints under a browser-generated key and atomically store them with outgoing messages in Vercel private Blob storage.
+3. On each visit, restore progress and process waiting messages automatically. Confirm storage separately from the encrypted peer receipt.
+4. Offer a personal self-contained HTML download that can recover the same encrypted progress from another desktop browser.
+5. Preserve the Sunday midnight UK deadline and explain that several short visits may be required, without requiring simultaneous presence.
 
-The server must not receive plaintext votes or results. Downloading fixes code after download; it does not independently establish trust in that code. A yes voter can infer a no from a failed match. Either participant can abort or misrepresent their preference. This app is not independently audited.
-
-Close at the end of Sunday 20 September 2026, midnight UK time (2026-09-20T23:00:00Z). Show a live countdown. Unfinished checks become “No further date” at the deadline; before it, technical failures remain inconclusive.
+The operator must not receive readable votes or results. Downloads fix code after download, not trust in the initial file. The implementation is not independently audited. Losing both browser storage and the personal file loses access.

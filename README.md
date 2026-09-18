@@ -1,35 +1,23 @@
 # Mutual Yes
 
-[Open the page](https://mutual-yes-alejo.vercel.app).
+I wanted a private Yes/No check that lets each person vote, close the page, and return later. [Open the site](https://mutual-yes-alejo.vercel.app) using your personal link.
 
-I wanted a small page where two people could privately decide whether to have another date. It shows whether both said yes, using secure computation in their browsers. The relay gets neither answer nor result.
+Choose once and wait for **Saved. You can close this page.** Reopen the same link in the same browser later today, and again before the deadline. The calculation advances automatically over a few short visits; you don't need to be online together. A personal HTML download can also reopen your progress in another desktop browser.
 
-Open the page, choose **Download HTML** or **Use in browser**, and share the invitation. Compare the connection codes in your existing chat, then choose independently. Both pages must stay open. The download is one self-contained 1.6 MB HTML file; desktop browsers are the easiest way to open it.
+The deadline is midnight after Sunday 20 September 2026, UK time. An unfinished exchange counts as **No further date**. There are no notifications. Losing both your browser data and personal HTML file loses access.
 
-The countdown ends at midnight after Sunday 20 September 2026, UK time. An unfinished check then counts as **No further date**. Before the deadline, a connection failure is inconclusive.
+Vercel hosts the page, API, and private Blob storage. Your browser encrypts saved state with a key created on your device. The server receives encrypted state and messages, not readable answers. [Security details](SECURITY.md) explain what this does and does not protect. This integration has not been independently audited.
 
-Downloading prevents later website updates from changing your copy. It does **not** prove the initial code is safe. If you choose yes, a no-match result reveals the other person’s no. [Security details and verification](SECURITY.md).
+## Development
 
-## Run locally
+`npm ci && npm run build && npm test` runs private comparisons, separate browser visits, downloaded files, storage conflicts, and deadlines. Install Chromium with `npx playwright install chromium` if needed.
 
-Requires Node 22 or newer.
+`PUBLIC_ORIGIN=https://mutual-yes-alejo.vercel.app npx vercel build --prod --yes` builds a deployment; `npx vercel deploy --prebuilt --prod --yes` publishes it. The client is a single HTML file. The API needs persistent Blob storage.
 
-```sh
-npm ci
-npm run build
-npm start
-# In a second terminal:
-npm test
-```
+Production variables:
 
-Open `http://localhost:8080`. Tests use Playwright Chromium (`npx playwright install chromium` if missing). They exercise the actual cryptography, hosted/local HTML combinations, expiration, disconnection, tampering, replay, and layout.
+- `BLOB_READ_WRITE_TOKEN`: access to the private `mutual-yes-async` Blob store. Stored in personal 1Password (`my.1password.com`), vault **Personal**, item **Mutual Yes async**, field **blob_token**.
+- `ROOM_ID`: public SHA-256 identifier restricting the API to this one check. Derived from the private invitation seed in the same item, field **invitation_seed**. No seed or personal browser key is included in the public source.
+- `PUBLIC_ORIGIN`: public page/API origin, supplied at build time.
 
-## Deploy
-
-Production uses Vercel for the page/download and one free Render process for the relay (`mutual-yes-relay.onrender.com`). The public build origins are pinned in `vercel.json`; deploy with `npx vercel --prod`. Render deployment is manual.
-
-For a single host, one Node process serves the page and WebSocket relay. No database, app credentials, or external scripts. Build with `PUBLIC_ORIGIN=https://your-host.example npm run build`, then `npm start`. Render’s `RENDER_EXTERNAL_URL` is used automatically. `PORT` defaults to 8080. `/health` returns `ok`.
-
-Do not use multiple instances: sessions live in one process and end on restart. Build/deploy before inviting anyone. Free hosting can take a minute to wake up; detecting a lost connection can take up to about 40 seconds.
-
-The maintained source is a few small files; `dist/index.html` is the single-file client produced by the build. [EMP-WASM](https://github.com/privacy-ethereum/emp-wasm) supplies authenticated garbling. Its browser port is archived and this integration has not had an independent security audit.
+For local manual use, set `ROOM_ID` to your test invitation's derived room and run `npm start`; local encrypted records go in ignored `.local-data/`. Tests make isolated temporary stores. The previous Render relay is unused by this version.
