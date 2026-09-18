@@ -1,19 +1,11 @@
-# Mutual Yes at a glance
+# Mutual Yes
 
-[Implementation plan](PLAN.md)
+[Open the app](https://mutual-yes-alejo.vercel.app) · [Source](https://github.com/alejoacelas/mutual-yes) · [Security details](SECURITY.md)
 
-## Build the private flow [45m]
+The page and single-file download run the same two-person computation. Vercel hosts the client; one free Render process forwards encrypted messages. Both browsers must remain open and compare their connection codes.
 
-- Deliver hosted and downloadable clients using existing secure computation.
+The deadline is the end of Sunday 20 September 2026, UK time. Unfinished checks become “No further date.” A yes voter can infer the other answer from a no match; downloading does not prove the original code was safe.
 
-1. [10m] Verify EMP in a browser and settle the relay authentication design.
-2. [25m] Build the minimal page, download, and relay.
-3. [10m] Verify all outcomes and failure states across hosted and local files.
+All four real computations, invitation restrictions, transport attacks, local files, deadline behavior, and mobile layout have passed. The project remains here while the check is active through Sunday.
 
-## Publish [15m]
-
-- Make a usable version and reviewable source available.
-
-1. [15m] Deploy, verify two real clients, and document limitations and dependency provenance.
-
-Outputs: a shareable page, one-file download, source repository, and test results.
+[Implementation plan](PLAN.md) · [Run log](RUN-LOG.md)
