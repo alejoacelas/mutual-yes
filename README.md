@@ -1,6 +1,6 @@
 # Mutual Yes
 
-I wanted a private Yes/No check that lets each person vote, close the page, and return later. [Open the site](https://mutual-yes-alejo.vercel.app) using your personal link.
+I wanted a private Yes/No check that lets each person vote, close the page, and return later. [Open the site](https://mutual-yes-async-alejo.vercel.app) using your personal link.
 
 Choose once and wait for **Saved. You can close this page.** Reopen the same link in the same browser later today, and again before the deadline. The calculation advances automatically over a few short visits; you don't need to be online together. A personal HTML download can also reopen your progress in another desktop browser.
 
@@ -12,7 +12,7 @@ Vercel hosts the page, API, and private Blob storage. Your browser encrypts save
 
 `npm ci && npm run build && npm test` runs private comparisons, separate browser visits, downloaded files, storage conflicts, and deadlines. Install Chromium with `npx playwright install chromium` if needed.
 
-`PUBLIC_ORIGIN=https://mutual-yes-alejo.vercel.app npx vercel build --prod --yes` builds a deployment; `npx vercel deploy --prebuilt --prod --yes` publishes it. The client is a single HTML file. The API needs persistent Blob storage.
+`PUBLIC_ORIGIN=https://mutual-yes-async-alejo.vercel.app npx vercel build --prod --yes` builds a deployment; `npx vercel deploy --prebuilt --prod --yes` publishes it. The client is a single HTML file. The API needs persistent Blob storage.
 
 Production variables:
 

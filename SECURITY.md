@@ -40,7 +40,7 @@ A Yes voter can infer the other's No from a no match. A person can choose Yes so
 
 ```sh
 npm ci
-PUBLIC_ORIGIN=https://mutual-yes-alejo.vercel.app npm run build
+PUBLIC_ORIGIN=https://mutual-yes-async-alejo.vercel.app npm run build
 node verify-download.mjs /path/to/mutual-yes.html
 ```
 

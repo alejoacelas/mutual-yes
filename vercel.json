@@ -45,11 +45,14 @@
     }
   ],
   "alias": [
-    "mutual-yes-alejo.vercel.app"
+    "mutual-yes-async-alejo.vercel.app"
   ],
   "build": {
     "env": {
-      "PUBLIC_ORIGIN": "https://mutual-yes-alejo.vercel.app"
+      "PUBLIC_ORIGIN": "https://mutual-yes-async-alejo.vercel.app"
     }
+  },
+  "git": {
+    "deploymentEnabled": false
   }
 }
