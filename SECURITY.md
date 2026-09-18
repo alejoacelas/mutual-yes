@@ -10,7 +10,7 @@ The library and this integration have not been independently audited for this us
 
 ## Visits, storage, and authentication
 
-Each participant has a link containing a common random 256-bit invitation seed and their role in the URL fragment. This removes manual code comparison. Keep both links private: anyone with the seed can impersonate a participant before its first saved visit. The person distributing the links knows this seed. A trusted initial client is still necessary; downloading does not independently establish trust.
+The public `/boy` and `/girl` pages embed a common random 256-bit invitation seed and their role. This deliberately makes access guessable: anyone who finds either URL can claim that role before its first saved visit. The user accepted this tradeoff for readable links. Legacy fragment invitations still open, then the address changes to the corresponding short path. The seed is public; browser-generated checkpoint keys remain private. A trusted initial client is still necessary; downloading does not independently establish trust.
 
 The browser creates a separate random 256-bit vault key on first use. The other participant and link distributor are not given this key. It is saved in local browser storage and included only in that browser's personal HTML download. It is never sent to the API. Possession of the original invitation alone does not decrypt a participant's saved state.
 

@@ -26,18 +26,23 @@ export function fileStore(directory) {
     },
   };
 }
-export async function startServer({ port = Number(process.env.PORT || 8080), host = '127.0.0.1', deadline = DEADLINE, roomId = process.env.ROOM_ID, store = fileStore('.local-data') } = {}) {
+export async function startServer({ port = Number(process.env.PORT || 8080), host = '127.0.0.1', deadline = DEADLINE, roomId = process.env.ROOM_ID, invitationSeed = process.env.PUBLIC_INVITATION_SEED, store = fileStore('.local-data') } = {}) {
+  if (invitationSeed && !/^[a-f0-9]{64}$/.test(invitationSeed)) throw Error('Invalid public invitation seed.');
   const api = createHandler(store, { deadline, roomId });
   const server = createServer(async (req, res) => {
     if (req.url === '/api/mailbox') return api(req, res);
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('Referrer-Policy', 'no-referrer');
     res.setHeader('X-Content-Type-Options', 'nosniff');
-    if (!['/', '/download', '/SHA256SUMS', '/health'].includes(req.url)) { res.writeHead(404); res.end(); return; }
+    if (!['/', '/boy', '/girl', '/download', '/SHA256SUMS', '/health'].includes(req.url)) { res.writeHead(404); res.end(); return; }
     if (req.url === '/health') { res.end('ok'); return; }
     res.setHeader('Content-Type', req.url === '/SHA256SUMS' ? 'text/plain' : 'text/html');
     if (req.url === '/download') res.setHeader('Content-Disposition', 'attachment; filename="mutual-yes.html"');
-    try { const body = await readFile(`dist/${req.url === '/SHA256SUMS' ? 'SHA256SUMS' : 'index.html'}`); res.end(req.method === 'HEAD' ? undefined : body); }
+    try {
+      let body = await readFile(`dist/${req.url === '/SHA256SUMS' ? 'SHA256SUMS' : 'index.html'}`, 'utf8');
+      if (invitationSeed && ['/boy', '/girl'].includes(req.url)) body = body.replace('<meta name="invitation" content="">', `<meta name="invitation" content="${invitationSeed}.${req.url === '/boy' ? 0 : 1}">`);
+      res.end(req.method === 'HEAD' ? undefined : body);
+    }
     catch { res.writeHead(503); res.end('Build the page first.'); }
   });
   await new Promise(resolve => server.listen(port, host, resolve));

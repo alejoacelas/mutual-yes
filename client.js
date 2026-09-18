@@ -116,6 +116,7 @@ async function start() {
     vault = match[3] || stored.vault || random();
     if (stored.vault && stored.vault !== vault && stored.version > 0) throw Error('This file belongs to a different saved visit. Open it in another browser.');
     localStorage.setItem(storageKey(), JSON.stringify({ vault, version: stored.version || 0, ciphertext: stored.ciphertext }));
+    if (!local && location.hash) history.replaceState(null, '', role === 0 ? '/boy' : '/girl');
     keys = await credentials(seed, vault);
     if (stored.ciphertext) state = await open(vault, stored.ciphertext, `${keys.room}:vault:${role}:${stored.version}`);
     $('download').hidden = local;

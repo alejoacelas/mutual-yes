@@ -1,6 +1,6 @@
 # Mutual Yes
 
-I wanted a private Yes/No check that lets each person vote, close the page, and return later. [Open the site](https://mutual-yes-alejo.fly.dev) using your personal link.
+I wanted a private Yes/No check that lets each person vote, close the page, and return later. The two links are [/boy](https://mutual-yes-alejo.fly.dev/boy) and [/girl](https://mutual-yes-alejo.fly.dev/girl). Anyone who finds a link can claim its vote before the intended person.
 
 Choose once and wait for **Saved. You can close this page.** Reopen the same link in the same browser later today, and again before the deadline. The calculation advances automatically over a few short visits; you don't need to be online together. A personal HTML download can also reopen your progress in another desktop browser.
 
@@ -17,6 +17,7 @@ Fly hosts the page and API on one small server with a persistent encrypted volum
 Production variables:
 
 - `ROOM_ID`: public SHA-256 identifier restricting the API to this one check. Derived from the private invitation seed in personal 1Password (`my.1password.com`), vault **Personal**, item **Mutual Yes async**, field **invitation_seed**. No seed or personal browser key is included in the public source.
+- `PUBLIC_INVITATION_SEED`: invitation seed served publicly on `/boy` and `/girl`, from the same **invitation_seed** field. This is deliberately public; private browser checkpoint keys are still never served.
 - `PUBLIC_ORIGIN`: public page/API origin, supplied at build time.
 
 For local manual use, set `ROOM_ID` to your test invitation's derived room and run `npm start`; local encrypted records go in ignored `.local-data/`. Tests make isolated temporary stores. The previous Render relay and Vercel resources are unused by the Fly deployment. The unused Blob credential remains in the same 1Password item, field **blob_token**.

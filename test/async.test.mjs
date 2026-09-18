@@ -34,11 +34,11 @@ test('all outcomes finish over separate visits, including downloaded HTML', {tim
     for (const [x,y] of [[0,0],[0,1],[1,0],[1,1]]) {
       const seed=random(), keys=await credentials(seed,random());
       const dir=await mkdtemp(`${tmpdir()}/mutual-async-`);
-      let app=await startServer({port:8080,roomId:keys.room,store:fileStore(dir)});
+      let app=await startServer({port:8080,roomId:keys.room,invitationSeed:seed,store:fileStore(dir)});
       const origin='http://localhost:8080';
       const contexts=await Promise.all([browser.newContext(),browser.newContext()]);
       const errors=[]; contexts.forEach(c=>c.on('page',p=>p.on('pageerror',e=>errors.push(e.message))));
-      const urls=[`${origin}/#${seed}.0`,`${origin}/#${seed}.1`];
+      const urls=[`${origin}/boy`,`${origin}/girl`];
       try {
         // Vote in reverse order too: either participant may arrive first.
         for (const role of x===0?[1,0]:[0,1]) {
@@ -60,7 +60,7 @@ test('all outcomes finish over separate visits, including downloaded HTML', {tim
           await p.close();
         }
         // Recreate the server: progress survives process restarts as well as closed tabs.
-        await app.close(); app=await startServer({port:8080,roomId:keys.room,store:fileStore(dir)});
+        await app.close(); app=await startServer({port:8080,roomId:keys.room,invitationSeed:seed,store:fileStore(dir)});
         const done=[false,false];
         for(let round=0;round<4 && !done.every(Boolean);round++) for(const role of [0,1]) {
           const p=await contexts[role].newPage(); await p.goto(urls[role]);
