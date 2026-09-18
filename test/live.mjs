@@ -5,7 +5,7 @@ import { readFile, mkdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 const {seed}=JSON.parse(await readFile('.private-test.json','utf8'));
-const origin=process.env.TEST_ORIGIN || 'https://mutual-yes-async-alejo.vercel.app';
+const origin=process.env.TEST_ORIGIN || 'https://mutual-yes-alejo.fly.dev';
 const browser=await chromium.launch();
 const contexts=await Promise.all([browser.newContext(),browser.newContext()]);
 const urls=[0,1].map(r=>`${origin}/#${seed}.${r}`);

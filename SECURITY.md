@@ -18,7 +18,7 @@ SHA-256 with distinct, versioned labels derives the room access capability, owne
 
 AES-256-GCM encrypts each message and each private state checkpoint with a fresh random 96-bit nonce. Additional authenticated data binds messages to room, sender, and index; checkpoints bind room, owner role, and monotonically increasing version. Messages are padded to 16 KiB and private checkpoints to 32 KiB before encryption so ciphertext length does not reveal the answer or result. Both participants know the transport key; the SMP proofs protect their separate inputs from each other. Only the owner knows its checkpoint key.
 
-Vercel private Blob storage holds opaque encrypted records. Each write atomically stores the outgoing messages and the private state that generated them. Conditional writes with ETags prevent overlapping tabs from overwriting each other's progress. Message lists are append-only. The client checks its locally remembered version to reject rollback. A malicious storage operator can still withhold, fork, or destroy records; this is not a globally verifiable append-only log.
+A Fly persistent volume holds opaque encrypted records. One server process serializes updates, checks versions, flushes the temporary file, atomically renames it, and flushes the directory before confirming the save. Each record stores the outgoing messages and the private state that generated them together. Version checks prevent overlapping tabs from overwriting each other's progress. Keep one machine and one process; this file store does not coordinate multiple writers. A single volume is not redundant: hardware failure can lose progress. Message lists are append-only. The client checks its locally remembered version to reject rollback. A malicious storage operator can still withhold, fork, or destroy records; this is not a globally verifiable append-only log.
 
 A successful API write means **saved**, not **seen by the other person**. A separate encrypted receipt is generated when the peer browser processes the confirmation. The interface distinguishes these states. Receipts disclose no input value.
 
@@ -40,7 +40,7 @@ A Yes voter can infer the other's No from a no match. A person can choose Yes so
 
 ```sh
 npm ci
-PUBLIC_ORIGIN=https://mutual-yes-async-alejo.vercel.app npm run build
+PUBLIC_ORIGIN=https://mutual-yes-alejo.fly.dev npm run build
 node verify-download.mjs /path/to/mutual-yes.html
 ```
 

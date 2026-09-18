@@ -1,0 +1,15 @@
+**
+!Dockerfile
+!package.json
+!package-lock.json
+!build.mjs
+!client.js
+!crypto.js
+!progress.js
+!config.mjs
+!page.html
+!server.mjs
+!api/
+!api/**
+!vendor/
+!vendor/**
