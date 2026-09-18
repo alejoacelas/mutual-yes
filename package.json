@@ -1,1 +1,1 @@
-{"name":"mutual-yes","version":"1.0.0","private":true,"type":"module","scripts":{"build":"node build.mjs","start":"node server.mjs","test":"node --test test/*.test.mjs"}}
+{"name":"mutual-yes","version":"1.0.0","private":true,"type":"module","scripts":{"build":"node build.mjs","start":"node server.mjs","test":"node --test test/*.test.mjs"},"dependencies":{"emp-wasm":"0.3.2","ws":"8.21.3"},"devDependencies":{"@playwright/test":"1.63.0","esbuild":"0.28.2"}}
