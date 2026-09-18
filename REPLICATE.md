@@ -33,3 +33,13 @@ The human wanted direct Yes/No voting, optional personal HTML downloads, and an 
 - Kept actual invitations and browser keys out of Git; the live test used a separate room before configuring the unused real invitation.
 
 Agent session 01a0b639-960c-7dd2-b1db-56db7d334e4d · Commits b9ce0f0, 560f9f1, 264a862, 6bef10b
+
+## Readable entry links
+
+The human wanted to share `/girl` directly and explicitly accepted guessable access.
+
+- Added `/boy` and `/girl` pages that supply the invitation automatically; legacy secret links switch to the short address after saving browser access.
+- Preserved existing checkpoint keys and saved votes. Documented that anyone finding a URL can claim its role before the intended person.
+- Passed all four local tests using the short paths and verified both deployed pages against the source build. Live browser checks intercepted the API to avoid touching real votes.
+
+Agent session 01a0b639-960c-7dd2-b1db-56db7d334e4d · Commits 4b259bd
