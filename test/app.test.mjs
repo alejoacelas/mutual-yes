@@ -32,6 +32,22 @@ test('hosted and downloaded browsers complete all four real MPC outcomes', { tim
   try {
     for (const [left, right] of [[0, 0], [0, 1], [1, 0], [1, 1]]) {
       const a = await browser.newPage(), b = await browser.newPage();
+      await a.addInitScript(() => {
+        const NativeSocket = window.WebSocket;
+        window.WebSocket = class extends NativeSocket {
+          constructor(...args) {
+            super(...args);
+            this.addEventListener('message', event => {
+              if (!window.holdReceipts) return;
+              event.stopImmediatePropagation();
+              window.releaseReceipt = () => {
+                window.holdReceipts = false;
+                this.dispatchEvent(new MessageEvent('message', { data: event.data }));
+              };
+            });
+          }
+        };
+      });
       const errors = [], requests = [];
       for (const page of [a, b]) {
         page.on('pageerror', e => errors.push(e.message));
@@ -70,10 +86,20 @@ test('hosted and downloaded browsers complete all four real MPC outcomes', { tim
         assert.equal(await page.locator('input[name=answer]:checked').count(), 0);
         await page.locator(`input[value="${answer}"]`).check();
         await page.locator('#understand').check();
+        if (page === a) await a.evaluate(() => { window.holdReceipts = true; });
         await page.locator('#confirm').click();
+        if (page === a) {
+          await a.waitForFunction(() => typeof window.releaseReceipt === 'function');
+          assert.match(await a.locator('#receipt').innerText(), /Waiting for an encrypted receipt/);
+          assert.equal(await a.locator('#result').isVisible(), false);
+          await a.evaluate(() => window.releaseReceipt());
+          await a.waitForFunction(() => document.getElementById('receipt').textContent.startsWith('Confirmation received.'));
+          assert.equal(await b.locator('input[name=answer]:checked').count(), 0, 'receipt does not require peer vote');
+        }
       }
       for (const page of [a, b]) {
         await page.locator('#result').waitFor({ state: 'visible', timeout: 60000 });
+        assert.match(await page.locator('#receipt').textContent(), /^Confirmation received\./);
         assert.equal(await page.locator('#result-title').innerText(), left && right ? 'You both said yes' : 'No mutual yes');
       }
       assert.deepEqual(errors, []);

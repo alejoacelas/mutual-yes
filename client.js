@@ -9,7 +9,7 @@ const tokenPattern = /^[a-f0-9]{32}\.[a-f0-9]{64}$/;
 let invitation = '';
 let sock, role, room, identity, peerCommit, channel, io;
 let outgoing = Promise.resolve(), incoming = Promise.resolve();
-let localVerified = false, peerVerified = false, localReady = false, peerReady = false;
+let localVerified = false, peerVerified = false, localReady = false, peerReady = false, receiptReceived = false;
 let started = false, ended = false, resultShown = false, answer, timer;
 
 function notice(text, error = false) {
@@ -82,7 +82,7 @@ function maybeVote() {
   }
 }
 async function maybeCompute() {
-  if (!localReady || !peerReady || started || ended) return;
+  if (!localReady || !peerReady || !receiptReceived || started || ended) return;
   started = true;
   describe('Checking for a mutual yes…', 'Your browsers are calculating the result privately.');
   timer = setTimeout(() => fail('The private calculation timed out.'), 120000);
@@ -112,7 +112,14 @@ async function receive(event) {
     if (bytes[0] === 1 && bytes.length === 1 && !peerVerified) {
       peerVerified = true; maybeVote();
     } else if (bytes[0] === 2 && bytes.length === 1 && peerVerified && !peerReady) {
-      peerReady = true; void maybeCompute();
+      peerReady = true;
+      await sendEncrypted(Uint8Array.of(3));
+      void maybeCompute();
+    } else if (bytes[0] === 3 && bytes.length === 1 && localReady && !receiptReceived) {
+      receiptReceived = true;
+      $('receipt').textContent = 'Confirmation received. The other browser acknowledged that your answer is locked, without seeing your choice.';
+      if (!peerReady) describe('Your answer is locked', 'Waiting for the other person’s choice. Keep this page open.');
+      void maybeCompute();
     } else if ((bytes[0] === 97 || bytes[0] === 98) && peerReady && localReady && io) {
       io.accept(bytes[0] === 97 ? 'a' : 'b', bytes.subarray(1));
     } else throw new Error('Invalid protocol state');
@@ -220,7 +227,9 @@ $('vote').onsubmit = async event => {
   answer = Number(new FormData($('vote')).get('answer'));
   if (answer !== 0 && answer !== 1) return;
   localReady = true; $('vote').hidden = true;
-  describe('Your answer is locked', 'Waiting for the other person. Keep this page open.');
+  describe('Your answer is locked', 'Sending your confirmation. Keep this page open.');
+  $('receipt').hidden = false;
+  $('receipt').textContent = 'Waiting for an encrypted receipt from the other browser…';
   try { await sendEncrypted(Uint8Array.of(2)); void maybeCompute(); } catch { fail(); }
 };
 $('restart-button').onclick = () => { location.hash = ''; location.reload(); };
