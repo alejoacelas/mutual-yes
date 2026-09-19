@@ -5,7 +5,7 @@ agent_context:
   - once
   visibility: public
 ---
-<!-- agent-context:begin sha256=cc3aa932e2bd95352d2ae412c60a17264af80a3adcfd45268b71f3ebdaac0808 -->
+<!-- agent-context:begin sha256=c9028887b1d8442f7c5b08b8aef9d2fc72f5dc14cc0bb704501be77757ff182b -->
 <!-- shared group: once -->
 # One-off projects
 
@@ -13,8 +13,9 @@ agent_context:
 - Give every one-off its own Git repository and GitHub remote when creating it.
 - Make it public unless it contains employer information, others' private information, or credentials.
 - Give its `AGENTS.md` one to three sentences stating its scope or goal and declare the `once` group.
-- Make `CLAUDE.md` contain `@AGENTS.md`.
-- When finished, move it to `~/best/archive/` and record its previous location and why in the archive's `REPLICATE.md`.
+- Keep instructions in `AGENTS.md`; do not create a duplicate `CLAUDE.md` unless an older or restricted Claude runtime needs an import shim.
+- When finished, suggest a durable home using `~/best/projects/AGENTS.md`: maintained tools, reference material, personal or work folders, or the shared archive.
+- Park unfinished or insubstantial work in its project topic's `archive/`. Record the old path and reason in that archive's `REPLICATE.md`.
 <!-- agent-context:end -->
 
 
