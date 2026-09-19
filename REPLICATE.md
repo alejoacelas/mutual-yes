@@ -43,3 +43,12 @@ The human wanted to share `/girl` directly and explicitly accepted guessable acc
 - Passed all four local tests using the short paths and verified both deployed pages against the source build. Live browser checks intercepted the API to avoid touching real votes.
 
 Agent session 01a0b639-960c-7dd2-b1db-56db7d334e4d · Commits 4b259bd
+
+## Agent instructions cleanup — 2026-09-19
+
+Alejo asked to refresh project instructions and remove redundant Claude instruction files where native AGENTS.md loading is available.
+
+- Updated the applicable instructions and removed redundant local Claude copies; distinct content and preserved snapshots remain.
+- Checked instruction references and shared-context freshness; native Claude loading requires 2.1.277+ with the built-in feature enabled.
+
+Agent session 01a0b915-3eb2-78b2-9add-6ba48ad9a3b1 · Commits 96d4b433c216dcb6a96c7ba0e35884f28f232108
