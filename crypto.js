@@ -37,7 +37,8 @@ export async function open(secret, ciphertext, context) {
 }
 export function snapshot(machine) {
   const fields = {};
-  for (const [name, value] of Object.entries(machine.state)) {
+  for (const entry of Object.entries(machine.state)) {
+    const name = entry[0], value = entry[1];
     if (['config', 'q', 'g1'].includes(name)) continue;
     if (BN.isBN(value)) fields[name] = { bn: value.toString(16) };
     else if (value instanceof group.MultiplicativeGroup) fields[name] = { group: value.value.toString(16) };
@@ -48,10 +49,11 @@ export function snapshot(machine) {
   return { type, fields };
 }
 export function restore(saved) {
-  if (!Object.hasOwn(smp.states, saved.type)) throw Error('Unknown protocol state');
+  if (!Object.prototype.hasOwnProperty.call(smp.states, saved.type)) throw Error('Unknown protocol state');
   const state = Object.create(smp.states[saved.type].prototype);
   Object.assign(state, { config: config.defaultConfig, q: config.defaultConfig.q, g1: config.defaultConfig.g });
-  for (const [name, value] of Object.entries(saved.fields)) {
+  for (const entry of Object.entries(saved.fields)) {
+    const name = entry[0], value = entry[1];
     if (!/^(x|s2|s3|g2L|g3L|g2R|g3R|g2|g3|pL|qL|pR|qR|rL|pa|qa|pb|qb|ra|rab)$/.test(name)) throw Error('Invalid state field');
     state[name] = value.bn !== undefined ? new BN(value.bn, 16) : new group.MultiplicativeGroup(config.defaultConfig.modulus, new BN(value.group, 16));
   }

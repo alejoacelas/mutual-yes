@@ -2,7 +2,11 @@ import { VERSION, begin, advance, digest, random, seal, open } from './crypto.js
 export const emptyState = () => ({ version: VERSION, secret: null, machine: null, seen: 0, result: null, receipt: false, readySeen: false });
 export async function processVisit(state, vote, messages, keys, role) {
   if (state.version !== VERSION) throw Error('This saved file uses a different version.');
-  const next = structuredClone(state), outgoing = [...messages[role]];
+  // State is deliberately JSON-serializable for encrypted checkpoints.
+  const next = JSON.parse(JSON.stringify(state)), outgoing = [...messages[role]];
+  // A receipt is a write and binds browser ownership just like a vote.
+  // Until this visitor chooses, do not process or acknowledge peer messages.
+  if (!next.secret && vote === null) return { state: next, messages: outgoing, changed: false };
   let changed = false;
   const append = async value => {
     outgoing.push(await seal(keys.transport, value, `${keys.room}:${role}:${outgoing.length}`)); changed = true;

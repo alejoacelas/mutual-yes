@@ -6,7 +6,7 @@ const local = location.protocol === 'file:';
 let keys, role, seed, vault, state = emptyState(), busy = false, pendingVote = null, clockOffset = 0, finalized = false;
 const origin = PUBLIC_ORIGIN;
 const storageKey = () => `mutual-yes-async:${seed}:${role}`;
-function heading(title, text) { $('status-title').textContent = title; $('status-text').textContent = text; }
+function heading(title, text) { $('startup-help').hidden = true; $('status-title').textContent = title; $('status-text').textContent = text; }
 function error(text) { $('error').textContent = text; $('error').hidden = !text; }
 function showResult(value, expired = false) {
   finalized = true;
@@ -31,11 +31,15 @@ function render() {
   }
 }
 async function request(extra = {}) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30000);
+  try {
   const response = await fetch(`${origin}/api/mailbox`, { method: 'POST', cache: 'no-store', credentials: 'omit', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ room: keys.room, auth: keys.auth, owner: keys.owner, role, ...extra }), signal: AbortSignal.timeout(30000) });
+    body: JSON.stringify({ room: keys.room, auth: keys.auth, owner: keys.owner, role, ...extra }), signal: controller.signal });
   const data = await response.json();
   if (!response.ok) { const e = Error(data.error || 'Could not save progress.'); e.status = response.status; throw e; }
   return data;
+  } finally { clearTimeout(timeout); }
 }
 function checkpoint(version, ciphertext) {
   localStorage.setItem(storageKey(), JSON.stringify({ vault, version, ciphertext }));

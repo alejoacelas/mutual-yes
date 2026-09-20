@@ -1,6 +1,6 @@
 # Mutual Yes
 
-I wanted a private Yes/No check that lets each person vote, close the page, and return later. The two links are [/boy](https://mutual-yes-alejo.fly.dev/boy) and [/girl](https://mutual-yes-alejo.fly.dev/girl). Anyone who finds a link can claim its vote before the intended person.
+I wanted a private Yes/No check that lets each person vote, close the page, and return later. The two links are [/boy](https://mutual-yes-alejo.fly.dev/boy) and [/girl](https://mutual-yes-alejo.fly.dev/girl). Previewing a link does not claim it, even after the other person votes. Anyone who finds a link can still claim it by voting before the intended person.
 
 Choose once and wait for **Saved. You can close this page.** Reopen the same link in the same browser later today, and again before the deadline. The calculation advances automatically over a few short visits; you don't need to be online together. A personal HTML download can also reopen your progress in another desktop browser.
 
@@ -10,7 +10,7 @@ Fly hosts the page and API on one small server with a persistent encrypted volum
 
 ## Development
 
-`npm ci && npm run build && npm test` runs private comparisons, separate browser visits, downloaded files, storage conflicts, and deadlines. Install Chromium with `npx playwright install chromium` if needed.
+`npm ci && npm run build && npm test` runs private comparisons, separate browser visits, downloaded files, storage conflicts, and deadlines. Install browsers with `npx playwright install chromium webkit` if needed. Regression tests preview a link after the peer votes, then vote from a fresh browser and verify both results in Chromium and WebKit. Startup instructions remain visible if the script cannot run.
 
 `FLY_API_TOKEN="$FLY_PERSONAL_TOKEN" fly deploy --ha=false` publishes the Docker image to the personal Fly app. Keep exactly one machine: the file store serializes writes in one process. The client is a single HTML file; encrypted progress lives on the mounted `/data` volume. The server flushes each write before confirming it. A single volume can survive restarts and deployments, but hardware loss can still lose progress.
 

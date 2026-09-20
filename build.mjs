@@ -6,7 +6,7 @@ const url = new URL(origin);
 if (url.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(url.hostname)) throw Error('HTTPS required');
 const result = await build({
   entryPoints: ['client.js'], bundle: true, write: false, minify: true,
-  format: 'iife', platform: 'browser', target: 'es2022', legalComments: 'inline',
+  format: 'iife', platform: 'browser', target: ['es2020', 'safari14'], legalComments: 'inline',
   define: { PUBLIC_ORIGIN: JSON.stringify(url.origin) },
   plugins: [{ name: 'webcrypto-random', setup(builder) {
     builder.onResolve({ filter: /^crypto$/ }, () => ({ path: 'crypto', namespace: 'webcrypto' }));

@@ -4,12 +4,64 @@ import { mkdtemp, readFile, mkdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { chromium } from 'playwright';
+import { chromium, webkit } from 'playwright';
+import { emptyState, processVisit } from '../progress.js';
 import { random, credentials, digest, begin, advance, seal, open } from '../crypto.js';
 import { startServer, fileStore } from '../server.mjs';
 import { DEADLINE } from '../config.mjs';
 
 const output = resolve('.test-output');
+test('a preview never writes a receipt or claims a role after the peer votes', async () => {
+  const seed = random(), keys = [await credentials(seed, random()), await credentials(seed, random())];
+  for (const voter of [0, 1]) {
+    const messages = [[], []];
+    messages[voter] = (await processVisit(emptyState(), 1, messages, keys[voter], voter)).messages;
+    const preview = await processVisit(emptyState(), null, messages, keys[1-voter], 1-voter);
+    assert.equal(preview.changed, false);
+    assert.deepEqual(preview.state, emptyState());
+    assert.deepEqual(preview.messages, []);
+  }
+});
+
+test('Chromium and WebKit allow previews followed by a vote in a fresh browser', {timeout:120000}, async () => {
+  for (const engine of [chromium, webkit]) {
+    const seed = random(), keys = await credentials(seed, random());
+    const directory = await mkdtemp(`${tmpdir()}/mutual-preview-`);
+    const store = fileStore(directory);
+    const app = await startServer({port:8080, roomId:keys.room, invitationSeed:seed, store});
+    const browser = await engine.launch();
+    try {
+      const boy = await browser.newPage();
+      // Exercise compatibility without newer browser convenience APIs.
+      await boy.addInitScript(() => { globalThis.structuredClone = undefined; Object.hasOwn = undefined; AbortSignal.timeout = undefined; });
+      await boy.goto('http://localhost:8080/boy');
+      await boy.locator('#yes:enabled').waitFor();
+      await boy.locator('#yes').click();
+      await boy.waitForFunction(() => document.getElementById('status-title').textContent.startsWith('Saved.'));
+      for (let i = 0; i < 2; i++) {
+        const preview = await browser.newPage();
+        await preview.goto('http://localhost:8080/girl');
+        await preview.locator('#yes:enabled').waitFor();
+        assert.equal(await store.read(`async-v1/${keys.room}/1.json`), null);
+        await preview.close();
+      }
+      const girl = await browser.newPage();
+      await girl.addInitScript(() => { globalThis.structuredClone = undefined; Object.hasOwn = undefined; AbortSignal.timeout = undefined; });
+      await girl.goto('http://localhost:8080/girl');
+      await girl.locator('#yes:enabled').waitFor();
+      await girl.locator('#yes').click();
+      await girl.waitForFunction(() => document.getElementById('status-title').textContent.startsWith('Saved.'));
+      for (let round = 0; round < 3; round++) for (const page of [boy, girl]) {
+        await page.reload();
+        await page.waitForFunction(() => !document.getElementById('status-title').textContent.includes('Opening'));
+      }
+      for (const page of [boy, girl]) assert.equal(await page.locator('#status-title').textContent(), 'You both said yes');
+      const noJS = await browser.newPage({javaScriptEnabled:false});
+      await noJS.goto('http://localhost:8080/girl');
+      assert.equal(await noJS.locator('#startup-help').isVisible(), true);
+    } finally { await browser.close(); await app.close(); }
+  }
+});
 test('private comparison restores every round and rejects tampering', async () => {
   for (const [x,y] of [[0,0],[0,1],[1,0],[1,1]]) {
     const yes = await digest('yes');
