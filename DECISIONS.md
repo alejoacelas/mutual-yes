@@ -29,13 +29,13 @@ Persisted SMP replaced the earlier synchronous EMP exchange so voting can surviv
 
 ### Keep the fixed deadline semantics explicit
 
-Unfinished exchange at midnight after Sunday 20 September 2026, UK time, counts as no further date; earlier disconnection is inconclusive. This archived project is a dated one-off, not an automatically recurring service. See [README.md](README.md).
+Unfinished exchange at midnight after Sunday 20 September 2026, UK time, counts as no further date; earlier disconnection is inconclusive. This project is a dated one-off, not an automatically recurring service. See [README.md](README.md).
 
 <a id="decision-3"></a>
 
 ### Preserve the deliberate public-link tradeoff
 
-The user accepted guessable /boy and /girl access. Anyone discovering a link can claim a role before its intended participant; the public invitation seed is not a private checkpoint key. Do not silently reset existing browser ownership or saved votes when changing entry links. See [SECURITY.md](SECURITY.md).
+The user accepted guessable /boy and /girl access. Anyone discovering a link can claim a role by voting before its intended participant; the public invitation seed is not a private checkpoint key. Opening a link must not claim it: defer receipts and all other writes until the visitor chooses. Do not silently reset existing browser ownership or saved votes when changing entry links. See [SECURITY.md](SECURITY.md).
 
 <a id="decision-4"></a>
 
@@ -54,3 +54,7 @@ The Fly deployment serializes atomic, flushed writes on one persistent volume. M
 ### Verify with separate test rooms and protect real votes
 
 Local tests use temporary stores; hosted-page checks can intercept APIs when real invitations exist. Preserve exact self-contained HTML delivery and keep personal checkpoint keys out of Git. Retired Render and Vercel resources are not the current storage path. See [README.md](README.md). History inspected: [4b259bd](https://github.com/alejoacelas/mutual-yes/commit/4b259bd), [6bef10b](https://github.com/alejoacelas/mutual-yes/commit/6bef10b).
+
+## Decision log
+
+- 2026-09-20: Previews must never save receipts or bind browser ownership before a vote. Test previews followed by voting from fresh browsers and verify results on both sides; see [df2da5a](https://github.com/alejoacelas/mutual-yes/commit/df2da5a). For the authorized replacement invitation, preserve old records and keep the original midnight deadline.
