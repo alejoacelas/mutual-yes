@@ -10,7 +10,7 @@ The library and this integration have not been independently audited for this us
 
 ## Visits, storage, and authentication
 
-The public `/boy` and `/girl` pages embed a common random 256-bit invitation seed and their role. This deliberately makes access guessable: anyone who finds either URL can claim that role before its first saved visit. The user accepted this tradeoff for readable links. Legacy fragment invitations still open, then the address changes to the corresponding short path. The seed is public; browser-generated checkpoint keys remain private. A trusted initial client is still necessary; downloading does not independently establish trust.
+The public `/boy` and `/girl` pages embed a common random 256-bit invitation seed and their role. This deliberately makes access guessable: anyone who finds either URL can claim that role by voting first. The client makes no writes until a vote is chosen, so merely opening a link cannot claim it. The user accepted this tradeoff for readable links. Legacy fragment invitations still open, then the address changes to the corresponding short path. The seed is public; browser-generated checkpoint keys remain private. A trusted initial client is still necessary; downloading does not independently establish trust.
 
 The browser creates a separate random 256-bit vault key on first use. The other participant and link distributor are not given this key. It is saved in local browser storage and included only in that browser's personal HTML download. It is never sent to the API. Possession of the original invitation alone does not decrypt a participant's saved state.
 
@@ -20,7 +20,7 @@ AES-256-GCM encrypts each message and each private state checkpoint with a fresh
 
 A Fly persistent volume holds opaque encrypted records. One server process serializes updates, checks versions, flushes the temporary file, atomically renames it, and flushes the directory before confirming the save. Each record stores the outgoing messages and the private state that generated them together. Version checks prevent overlapping tabs from overwriting each other's progress. Keep one machine and one process; this file store does not coordinate multiple writers. A single volume is not redundant: hardware failure can lose progress. Message lists are append-only. The client checks its locally remembered version to reject rollback. A malicious storage operator can still withhold, fork, or destroy records; this is not a globally verifiable append-only log.
 
-A successful API write means **saved**, not **seen by the other person**. A separate encrypted receipt is generated when the peer browser processes the confirmation. The interface distinguishes these states. Receipts disclose no input value.
+A successful API write means **saved**, not **seen by the other person**. A separate encrypted receipt is generated when the peer browser processes the confirmation, after choosing its own vote. The interface distinguishes these states. Receipts disclose no input value.
 
 ## What reopening does
 

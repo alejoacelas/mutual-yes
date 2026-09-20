@@ -18,6 +18,7 @@ Production variables:
 
 - `ROOM_ID`: public SHA-256 identifier restricting the API to this one check. Derived from the private invitation seed in personal 1Password (`my.1password.com`), vault **Personal**, item **Mutual Yes async**, field **invitation_seed**. No seed or personal browser key is included in the public source.
 - `PUBLIC_INVITATION_SEED`: invitation seed served publicly on `/boy` and `/girl`, from the same **invitation_seed** field. This is deliberately public; private browser checkpoint keys are still never served.
+- The invitation replaced during the 20 September repair is preserved in the same item under **invitation_seed_before_2026_09_20_repair**. Its encrypted records remain on the volume; changing the active invitation does not delete them.
 - `PUBLIC_ORIGIN`: public page/API origin, supplied at build time.
 
 For local manual use, set `ROOM_ID` to your test invitation's derived room and run `npm start`; local encrypted records go in ignored `.local-data/`. Tests make isolated temporary stores. The previous Render relay and Vercel resources are unused by the Fly deployment. The unused Blob credential remains in the same 1Password item, field **blob_token**.
