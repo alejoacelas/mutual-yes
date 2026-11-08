@@ -1,5 +1,7 @@
 # Mutual Yes
 
+Shut down on 2026-11-08: the Fly app `mutual-yes-alejo` and its volume of encrypted progress are deleted, so the links below no longer work. The rest describes the app as it ran.
+
 I wanted a private Yes/No check that lets each person vote, close the page, and return later. The two links are [/boy](https://mutual-yes-alejo.fly.dev/boy) and [/girl](https://mutual-yes-alejo.fly.dev/girl). Previewing a link does not claim it, even after the other person votes. Anyone who finds a link can still claim it by voting before the intended person.
 
 Choose once and wait for **Saved. You can close this page.** Reopen the same link in the same browser later today, and again before the deadline. The calculation advances automatically over a few short visits; you don't need to be online together. A personal HTML download can also reopen your progress in another desktop browser.
