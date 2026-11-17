@@ -11,3 +11,8 @@ This repository is initialized for the Stripe project "2026-09-mutual-yes".
 
 - [Stripe CLI](https://docs.stripe.com/stripe-cli) with the `projects` plugin to manage third-party services, credentials, and deployments for this project. Use the stripe-projects-cli to manage deploying and access to third party services.
 <!-- stripe-projects-cli managed:agents-md:end -->
+
+## .env
+
+- `ROOM_ID` and `PUBLIC_INVITATION_SEED`: derived from personal 1Password (`my.1password.com`), vault `Personal`, item `Mutual Yes async`, field `invitation_seed`.
+- `RENDER_URL`: the URL of the old Render relay, which the Fly deployment no longer uses; not a secret.
