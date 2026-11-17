@@ -1,3 +1,5 @@
+Tags: web-app, privacy
+
 Build a minimal two-person mutual-yes page with client-side secure computation, a relay, and a self-contained HTML download. Keep personal information out of the app and repository; state privacy limits accurately.
 
 <!-- stripe-projects-cli managed:agents-md:start -->
